@@ -1,30 +1,31 @@
-require 'eventmachine'
 require 'em-scheduled-timer'
 
 describe EM::ScheduledTimer do
-  let(:delay) { 12.34 }
-  let(:callback) { mock(:callback) }
+  let(:soon) { Time.now + 0.1 }
 
-  it "fires a timer after a delay given by the difference between current and given time" do
+  it "runs the block at the given time" do
     EM.run {
-      EventMachine.should_receive(:add_timer) { |actual, _| actual.should be_within(0.1).of(delay) }
-      EventMachine::ScheduledTimer.new(Time.now + delay, callback)
-      EM.stop
+      EventMachine::ScheduledTimer.new(soon) do
+        EM.stop # Pass
+      end
+
+      EM.add_timer(0.2) do
+        fail "Expected timer to fire at the scheduled time, but it didn't"
+      end
     }
   end
 
-  describe "cancelling a timer" do
-    let(:signature) { mock(:signature) }
-    before { EventMachine.stub(:add_timer) { signature } }
+  it "can be cancelled" do
+    EM.run {
+      timer = EventMachine::ScheduledTimer.new(soon) do
+        fail "Expected timer not to fire, but it did"
+      end
 
-    it "can be cancelled" do
-      EM.run {
-        EventMachine.should_receive(:cancel_timer).with(signature)
-        timer = EventMachine::ScheduledTimer.new(Time.now + delay, callback)
-        timer.cancel
+      timer.cancel
 
-        EM.stop
-      }
-    end
+      EM.add_timer(0.2) do
+        EM.stop # Pass
+      end
+    }
   end
 end
