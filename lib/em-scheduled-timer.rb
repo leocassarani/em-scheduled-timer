@@ -17,4 +17,10 @@ module EventMachine
       time - Time.now
     end
   end
+
+  def self.add_scheduled_timer(*args, &block)
+    interval = args.shift
+    callback = args.shift || block
+    EventMachine::ScheduledTimer.new(interval, callback)
+  end
 end
