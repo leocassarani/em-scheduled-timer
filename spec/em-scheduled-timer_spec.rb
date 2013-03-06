@@ -1,4 +1,5 @@
 require 'em-scheduled-timer'
+require 'time'
 require File.expand_path('../support/eventmachine_helper', __FILE__)
 
 describe EM::ScheduledTimer do
@@ -47,6 +48,24 @@ describe EM::ScheduledTimer do
       EM.run {
         callback = lambda { pass }
         EM.add_scheduled_timer(soon, callback)
+        fail_after(0.2)
+      }
+    end
+  end
+
+  describe "specifying a firing time" do
+    it "supports DateTime objects" do
+      EM.run {
+        datetime = soon.to_datetime
+        EventMachine::ScheduledTimer.new(datetime) { pass }
+        fail_after(0.2)
+      }
+    end
+
+    it "supports any object that responds to #to_time" do
+      EM.run {
+        future = mock(:future, to_time: soon)
+        EventMachine::ScheduledTimer.new(future) { pass }
         fail_after(0.2)
       }
     end

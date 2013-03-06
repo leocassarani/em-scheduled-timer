@@ -4,7 +4,7 @@ require "em-scheduled-timer/version"
 module EventMachine
   class ScheduledTimer
     def initialize(time, callback = nil, &block)
-      @signature = EventMachine.add_timer(delay(time), callback || block)
+      @signature = EventMachine.add_timer(interval(time), callback || block)
     end
 
     def cancel
@@ -13,8 +13,8 @@ module EventMachine
 
     private
 
-    def delay(time)
-      time - Time.now
+    def interval(time)
+      time.to_time - Time.now
     end
   end
 
