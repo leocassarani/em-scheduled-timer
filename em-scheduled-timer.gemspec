@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = EventMachine::ScheduledTimer::VERSION
   spec.authors       = ["Leo Cassarani"]
   spec.email         = ["leo.cassarani@me.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{EM::ScheduledTimer provides EventMachine timers that let you specify a time, rather than an interval, at which to fire.}
+  spec.summary       = %q{EventMachine timers that fire at a given time in the future}
+  spec.homepage      = "https://github.com/leocassarani/em-scheduled-timer"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
