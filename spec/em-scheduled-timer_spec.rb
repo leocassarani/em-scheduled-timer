@@ -12,4 +12,19 @@ describe EM::ScheduledTimer do
       EM.stop
     }
   end
+
+  describe "cancelling a timer" do
+    let(:signature) { mock(:signature) }
+    before { EventMachine.stub(:add_timer) { signature } }
+
+    it "can be cancelled" do
+      EM.run {
+        EventMachine.should_receive(:cancel_timer).with(signature)
+        timer = EventMachine::ScheduledTimer.new(Time.now + delay, callback)
+        timer.cancel
+
+        EM.stop
+      }
+    end
+  end
 end
